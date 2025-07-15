@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tevin Kimani - Full Stack Developer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Add EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #60A5FA;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .active::after {
+            width: 100%;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        body {
+            background-color: #0F172A;
+        }
+        .content-card {
+            background-color: white;
+            color: #1E293B;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .text-primary {
+            color: #60A5FA;
+        }
+        .text-secondary {
+            color: #64748B;
+        }
+        .text-tertiary {
+            color: #1E293B;
+        }
+        .bg-primary {
+            background-color: #0F172A;
+        }
+        .bg-secondary {
+            background-color: #1E293B;
+        }
+        .border-primary {
+            border-color: #60A5FA;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.5s forwards, fadeOut 0.5s forwards 3s;
+        }
+        .notification.error {
+            background-color: #F44336;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        Message successfully sent! Please check your inbox.
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-primary shadow-lg fixed w-full z-10 border-b border-gray-800">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-xl font-bold text-white">Tevin Kimani</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#" class="nav-link text-white px-3 py-2 text-sm font-medium active" data-section="home">Home</a>
+                        <a href="#" class="nav-link text-white px-3 py-2 text-sm font-medium" data-section="about">About</a>
+                        <a href="#" class="nav-link text-white px-3 py-2 text-sm font-medium" data-section="skills">Skills</a>
+                        <a href="#" class="nav-link text-white px-3 py-2 text-sm font-medium" data-section="projects">Projects</a>
+                        <a href="#" class="nav-link text-white px-3 py-2 text-sm font-medium" data-section="contact">Contact</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button class="mobile-menu-button p-2 rounded-md text-white hover:text-gray-300 focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>   
+        </div>
+        <!-- Mobile menu -->
+        <div class="mobile-menu hidden md:hidden bg-primary border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-800 active" data-section="home">Home</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-800" data-section="about">About</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-800" data-section="skills">Skills</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-800" data-section="projects">Projects</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium text-white hover:bg-gray-800" data-section="contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-16 min-h-screen">
+        <!-- Home Section -->
+        <section id="home" class="section active py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="content-card">
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="md:w-1/2 mb-10 md:mb-0">
+                            <h1 class="text-4xl md:text-5xl font-bold text-tertiary mb-4">Hello, I'm <br><span class="text-primary">Tevin Kimani</span></h1>
+                            <p class="text-lg text-secondary mb-8">I'm a full-stack developer specializing in building exceptional digital experiences.</p>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <img src="profile.jpg" alt="Tevin Kimani" class="rounded-full w-64 h-64 md:w-80 md:h-80 object-cover shadow-xl border-4 border-gray-200">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="content-card">
+                    <h2 class="text-3xl font-bold text-center text-tertiary mb-12">About Me</h2>
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="md:w-1/3 mb-8 md:mb-0 flex justify-center">
+                            <img src="profile.jpg" alt="Tevin Kimani" class="rounded-full w-48 h-48 object-cover shadow-lg border-4 border-gray-200">
+                        </div>
+                        <div class="md:w-2/3 md:pl-12">
+                            <p class="text-secondary mb-6">
+                                I'm Tevin Kimani, a passionate full-stack developer with experience in building web applications using modern technologies. 
+                                I enjoy solving complex problems and creating efficient, scalable solutions.
+                            </p>
+                            <p class="text-secondary mb-6">
+                                In my free time, I love exploring new technologies and expanding my skill set 
+                                to stay at the forefront of web development.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="content-card">
+                    <h2 class="text-3xl font-bold text-center text-tertiary mb-12">My Skills</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Web Development -->
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                            <div class="text-primary mb-3">
+                                <i class="fas fa-code text-4xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-tertiary mb-4">Web Development</h3>
+                            <ul class="text-secondary space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> HTML, CSS, JavaScript, Tailwind CSS</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Responsive & accessible web design</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Full project builds (frontend & backend)</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Programming & Scripting -->
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                            <div class="text-primary mb-3">
+                                <i class="fas fa-laptop-code text-4xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-tertiary mb-4">Programming & Scripting</h3>
+                            <ul class="text-secondary space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Python (automation, data tasks, app logic)</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Django (hospital systems, CRUD apps, authentication)</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Bash scripting and CLI usage</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Database & Backend -->
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                            <div class="text-primary mb-3">
+                                <i class="fas fa-database text-4xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-tertiary mb-4">Database & Backend</h3>
+                            <ul class="text-secondary space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> MySQL, SQLite (setup, queries, management)</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Django ORM & database modeling</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Cybersecurity & Networking -->
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                            <div class="text-primary mb-3">
+                                <i class="fas fa-shield-alt text-4xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-tertiary mb-4">Cybersecurity & Networking</h3>
+                            <ul class="text-secondary space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> System security basics & ethical hacking</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Network setup, troubleshooting & simulations</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> XAMPP, localhost environments, and server config</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Other Technical Skills -->
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                            <div class="text-primary mb-3">
+                                <i class="fas fa-tools text-4xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-tertiary mb-4">Other Technical Skills</h3>
+                            <ul class="text-secondary space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Git & GitHub version control</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> VS Code, PyCharm, Anaconda environments</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Troubleshooting, debugging, and clean code practices</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Graphic & UI Design -->
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                            <div class="text-primary mb-3">
+                                <i class="fas fa-paint-brush text-4xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-tertiary mb-4">Graphic & UI Design</h3>
+                            <ul class="text-secondary space-y-2">
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Logo, branding, and poster design</li>
+                                <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i> Attention to UI/UX details and clean layout design</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="content-card">
+                    <h2 class="text-3xl font-bold text-center text-tertiary mb-12">My Projects</h2>
+                    <div class="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200">
+                        <div class="h-64 bg-gray-100 flex items-center justify-center">
+                            <iframe src="https://tevin-cake-haven.netlify.app/" class="w-full h-full" frameborder="0"></iframe>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-tertiary mb-2">Tevin Cake Haven</h3>
+                            <p class="text-secondary mb-4">A beautiful bakery website showcasing delicious cakes and pastries with online ordering functionality.</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">HTML</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">CSS</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">JavaScript</span>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Responsive</span>
+                            </div>
+                            <a href="https://tevin-cake-haven.netlify.app/" target="_blank" class="text-primary hover:text-blue-600 font-medium inline-flex items-center">
+                                Visit Website <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section py-20 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="content-card">
+                    <h2 class="text-3xl font-bold text-center text-tertiary mb-12">Get In Touch</h2>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+                        <div class="md:flex">
+                            <div class="md:w-1/2 bg-gray-50 p-8">
+                                <h3 class="text-xl font-semibold mb-4 text-tertiary">Contact Information</h3>
+                                <p class="mb-6 text-secondary">Feel free to reach out to me for any questions or opportunities.</p>
+                                <div class="flex items-center mb-4 text-secondary">
+                                    <i class="fas fa-envelope mr-4 text-primary"></i>
+                                    <span>kimanitevin10@gmail.com</span>
+                                </div>
+                                <div class="flex items-center mb-4 text-secondary">
+                                    <i class="fas fa-phone mr-4 text-primary"></i>
+                                    <span>+254 712714414</span>
+                                </div>
+                                <div class="flex items-center mb-4 text-secondary">
+                                    <i class="fas fa-map-marker-alt mr-4 text-primary"></i>
+                                    <span>Nairobi, Kenya</span>
+                                </div>
+                                <div class="mt-8">
+                                    <h4 class="text-lg font-semibold mb-4 text-tertiary">Follow Me</h4>
+                                    <div class="flex space-x-4">
+                                        <a href="#" class="text-secondary hover:text-primary">
+                                            <i class="fab fa-github text-2xl"></i>
+                                        </a>
+                                        <a href="#" class="text-secondary hover:text-primary">
+                                            <i class="fab fa-linkedin text-2xl"></i>
+                                        </a>
+                                        <a href="#" class="text-secondary hover:text-primary">
+                                            <i class="fab fa-twitter text-2xl"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="md:w-1/2 p-8">
+                                <form id="contactForm">
+                                    <div class="mb-4">
+                                        <label for="name" class="block text-secondary text-sm font-bold mb-2">Name</label>
+                                        <input type="text" id="name" name="name" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-tertiary" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="email" class="block text-secondary text-sm font-bold mb-2">Email</label>
+                                        <input type="email" id="email" name="email" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-tertiary" required>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="subject" class="block text-secondary text-sm font-bold mb-2">Subject</label>
+                                        <input type="text" id="subject" name="subject" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-tertiary" required>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="message" class="block text-secondary text-sm font-bold mb-2">Message</label>
+                                        <textarea id="message" name="message" rows="4" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-tertiary" required></textarea>
+                                    </div>
+                                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">
+                                        Send Message
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-8 border-t border-gray-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-bold text-white">Tevin Kimani</span>
+                    <p class="text-gray-400 mt-1">Full Stack Developer</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400">
+                <p>&copy; 2023 Tevin Kimani. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize EmailJS with your User ID
+        (function() {
+            emailjs.init("YOUR_EMAILJS_USER_ID"); // Replace with your actual EmailJS user ID
+        })();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Navigation between sections
+        const navLinks = document.querySelectorAll('.nav-link, .mobile-menu a');
+        const sections = document.querySelectorAll('.section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Hide all sections
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the selected section
+                const sectionId = link.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Update active nav link
+                navLinks.forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                link.classList.add('active');
+                
+                // Close mobile menu if open
+                mobileMenu.classList.add('hidden');
+                
+                // Scroll to top of the section
+                document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // Set home as default active section
+        document.getElementById('home').classList.add('active');
+
+        // Contact form submission with EmailJS
+        const contactForm = document.getElementById('contactForm');
+        const notification = document.getElementById('notification');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+            
+            // Prepare the email parameters
+            const templateParams = {
+                from_name: contactForm.name.value,
+                from_email: contactForm.email.value,
+                subject: contactForm.subject.value,
+                message: contactForm.message.value,
+                to_email: "kimanitevin10@gmail.com" // Your email address
+            };
+            
+            // Send the email to yourself (main contact form)
+            emailjs.send('YOUR_EMAILJS_SERVICE_ID', 'contact_form', templateParams)
+                .then(() => {
+                    // If successful, send the autoreply
+                    return emailjs.send('YOUR_EMAILJS_SERVICE_ID', 'autoreply_template', {
+                        from_name: "Tevin Kimani", // Your name
+                        from_email: "kimanitevin10@gmail.com", // Your email
+                        to_name: templateParams.from_name,
+                        to_email: templateParams.from_email,
+                        subject: templateParams.subject,
+                        message: templateParams.message
+                    });
+                })
+                .then(() => {
+                    // Show success notification
+                    notification.textContent = 'Message sent successfully! Check your email for confirmation.';
+                    notification.style.backgroundColor = '#4CAF50';
+                    notification.style.display = 'block';
+                    
+                    // Reset form
+                    contactForm.reset();
+                    
+                    // Hide notification after 3 seconds
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 3000);
+                })
+                .catch((error) => {
+                    // Show error notification
+                    notification.textContent = 'Failed to send message. Please try again.';
+                    notification.style.backgroundColor = '#F44336';
+                    notification.style.display = 'block';
+                    
+                    // Hide notification after 3 seconds
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 3000);
+                    
+                    console.error('Email sending failed:', error);
+                })
+                .finally(() => {
+                    // Reset button state
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                });
+        });
+    </script>
+</body>
+</html>
